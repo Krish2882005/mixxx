@@ -605,11 +605,13 @@ void LibraryScanner::slotDirectoryHashedAndScanned(const QString& directoryPath,
     //kLogger.debug() << "sloDirectoryHashedAndScanned" << directoryPath
     //          << newDirectory << hash;
 
+    if (!m_scannerGlobal || m_scannerGlobal->shouldCancel()) {
+        return;
+    }
+
     // For statistics tracking -- if we hashed a directory then we scanned it
     // (it was changed or new).
-    if (m_scannerGlobal) {
-        m_scannerGlobal->directoryScanned();
-    }
+    m_scannerGlobal->directoryScanned();
 
     if (newDirectory) {
         m_libraryHashDao.saveDirectoryHash(directoryPath, hash);
